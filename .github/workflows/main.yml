@@ -48,13 +48,9 @@ jobs:
         git fetch --all
 
         git stash
-        if [[ $( git branch -r | grep "$branch" ) ]]; then
-          git checkout "$branch"
-        else
-          git checkout --set-upstream-to=origin -b "$branch"
-        fi
+        git checkout -B "$branch"
         git stash pop
 
         git add .
         git commit -m 'Update generated files' || true
-        git push "$branch"
+        git push --set-upstream origin "$branch"

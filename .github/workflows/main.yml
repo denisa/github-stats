@@ -16,7 +16,7 @@ jobs:
     concurrency: ${{ github.workflow }}-build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: actions/setup-python@v2
       with:
         python-version: '3.8'
@@ -40,9 +40,21 @@ jobs:
         EXCLUDED_LANGS: ${{ secrets.EXCLUDED_LANGS }}
         EXCLUDE_FORKED_REPOS: true
     - run: |
-        git config --global user.name "jstrieb/github-stats"
-        git config --global user.email "github-stats[bot]@jstrieb.github.io"
+        readonly branch=generated
+        git config user.name "denisa/github-stats"
+        git config user.email "github-stats[bot]@users.noreply.github.com"
+
+        git remote update
+        git fetch --all
+
+        git stash
+        if [[ $( git branch -r | grep "$branch" ) ]]; then
+          git checkout "$branch"
+        else
+          git checkout --set-upstream-to=origin -b "$branch"
+        fi
+        git stash pop
+
         git add .
-        # Force the build to succeed, even if no files were changed
         git commit -m 'Update generated files' || true
-        git push
+        git push "$branch"

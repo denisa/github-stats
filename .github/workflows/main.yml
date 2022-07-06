@@ -46,11 +46,10 @@ jobs:
         git config user.name "denisa/github-stats"
         git config user.email "github-stats[bot]@users.noreply.github.com"
 
-        git status
         git remote update
         git fetch --all
 
-        git stash
+        git stash push --include-untracked
         git checkout -B "$branch"
         git stash pop
 

@@ -50,7 +50,11 @@ jobs:
         git fetch --all
 
         git stash push --include-untracked
-        git checkout -B "$branch"
+        if [[ $( git branch -r | grep "$branch" ) ]]; then
+           git checkout "$branch"
+        else
+           git checkout --set-upstream-to=origin -b "$branch"
+        fi
         git stash pop
 
         git add .

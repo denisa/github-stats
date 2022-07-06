@@ -52,6 +52,7 @@ jobs:
         git stash push --include-untracked
         if [[ $( git branch -r | grep "$branch" ) ]]; then
            git checkout "$branch"
+           rm -f generated/*
         else
            git checkout --set-upstream-to=origin -b "$branch"
         fi
